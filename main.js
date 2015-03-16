@@ -1,5 +1,5 @@
 var fs = require('fs');
-if (!fs.existsSync("./config.js")) {
+if (!fs.existsSync("./config/config.js")) {
 	console.log("config.js is missing. please read the documentation.");
 	process.exit(1);
 }
@@ -12,9 +12,9 @@ var sys = require('sys');
 var exec = require('child_process').execSync;
 var S = require('string');
 
-var db = require('./db')();
-var config = require('./config');
-var cache = require('./cache')(db.connection, config);
+var db = require('./lib/db.js')();
+var config = require('./config/config');
+var cache = require('./lib/cache')(db.connection, config);
 
 
 

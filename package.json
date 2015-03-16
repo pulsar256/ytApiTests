@@ -1,10 +1,19 @@
 {
-  "name": "YTBridge",
-  "version": "0.0.0",
+  "name": "ytApiTests",
+  "version": "0.0.1",
   "private": true,
-  "scripts": {
-    "start": "node ./app-js"
+  "author": {
+    "name": "Paul Rogalinski",
+    "email": "github@memoryleaks.org",
+    "url": "http://paul.vc/+"
   },
+  "bin": {
+    "ytScanner": "./main.js"
+  },
+  "scripts": {
+    "start": "node /main.js"
+  },
+  "license": "BSD-3-Clause",
   "dependencies": {
     "lockfile": "~1.0.0",
     "q": "~1.2.0",

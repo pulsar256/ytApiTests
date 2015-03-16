@@ -1,3 +1,3 @@
 #!/bin/bash
 source /etc/profile
-node ./app.js
+node ./main.js
