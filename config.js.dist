@@ -12,5 +12,11 @@ module.exports = {
 	registerWindow: (new Date()).getTime() - (48 * 60 * 60 * 1000),
 
 	// default cache ttl (i.e. for subscriptions), defaults to 6 hours.
-	defaultCacheTTL: (new Date()).getTime() - (6 * 60 * 60 * 1000)
+	defaultCacheTTL: (new Date()).getTime() - (6 * 60 * 60 * 1000),
+
+	// delay for processing new registered videos.
+	processDelay: (2 * 60 * 60 * 1000),
+
+	// number of retries for videoCommand scripts in case of non-zero return values.
+  videoCommandRetries: 3
 };

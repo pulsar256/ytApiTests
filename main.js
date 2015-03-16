@@ -78,6 +78,7 @@ https.globalAgent.maxSockets = 25;
 			", thumbnail TEXT" +
 			", registered INT " +
 			", processed INT  " +
+			", failed INT  " +
 			")");
 			db.run("CREATE TABLE IF NOT EXISTS obj_cache  (id TEXT PRIMARY KEY, content TEXT, expire INT)");
 		});
@@ -92,7 +93,7 @@ https.globalAgent.maxSockets = 25;
 		db.get("select 1 from yt_videos where video_id = ?", videoData.videoId, function (err, row) {
 			if(err) { throw err; }
 			if(!row) {
-				db.run("insert into yt_videos values (?,?,?,?,?,?,?,?)", [
+				db.run("insert into yt_videos values (?,?,?,?,?,?,?,?,?)", [
 					videoData.videoId,
 					videoData.channelTitle,
 					videoData.description,
@@ -100,6 +101,7 @@ https.globalAgent.maxSockets = 25;
 					videoData.title,
 					videoData.thumbnail,
 					(new Date()).getTime(),
+					0,
 					0
 				], function (err) {
 					if(err) { throw err; }
@@ -166,27 +168,7 @@ https.globalAgent.maxSockets = 25;
 			})("", data);
 		}
 
-		function getPlaylists(callback) {
-			yt.playlists.list({
-				"part": "snippet",
-				"mine": true
-			}, function (err, data) {
-				if(err) {
-					throw err;
-				}
-				if(data) {
-					callback(data);
-				}
-			});
-		}
-
 		function refreshToken(callback) {
-
-			var post = S("client_id={{client_id}}&" +
-			"client_secret={{client_secret}}&" +
-			"&refresh_token={{refresh_token}}&" +
-			"&grant_type=refresh_token").template(config).s;
-
 			var request = https.request({
 				host: 'accounts.google.com',
 				path: '/o/oauth2/token',
@@ -205,7 +187,10 @@ https.globalAgent.maxSockets = 25;
 					callback(JSON.parse(str));
 				});
 			});
-			request.write(post);
+			request.write(S("client_id={{client_id}}&" +
+			"client_secret={{client_secret}}&" +
+			"&refresh_token={{refresh_token}}&" +
+			"&grant_type=refresh_token").template(config).s);
 			request.end();
 		}
 
@@ -239,7 +224,7 @@ https.globalAgent.maxSockets = 25;
 					};
 
 					maybeRegisterVideo(data, function (registered) {
-						if(registered) console.log(data.videoId, registered ? "registered" : "skipped");
+						if(registered) console.log(data.videoId, "registered");
 						iterate(coll);
 					})
 				}
@@ -254,18 +239,22 @@ https.globalAgent.maxSockets = 25;
 		function processDownload(row) {
 			var d = q.defer();
 			console.log("processing", row.video_id);
-			try{
+			try {
 				console.log(exec(S(config.videoCommand).template(row).s));
-				db.serialize(function () {
-					db.run("update yt_videos set processed = 1 where video_id = ?", [row.video_id], function (err) {
+				db.run("update yt_videos set processed = 1 where video_id = ?", [row.video_id], function (err) {
+					if(err) throw err;
+					d.resolve(true);
+				});
+			}
+			catch(err) {
+				console.log("download command failed.");
+				db.get("select failed from yt_videos where video_id = ?",row.video_id, function(err,data){
+					var failed = data.failed +1;
+					db.run("update yt_videos set failed = ? where video_id = ?", [failed, row.video_id], function (err) {
 						if(err) throw err;
-						d.resolve(true);
+						d.resolve(false);
 					});
 				});
-			} catch (err) {
-				console.log("download command failed.");
-				d.resolve(false);
-				return;
 			}
 
 			return d.promise;
@@ -274,7 +263,8 @@ https.globalAgent.maxSockets = 25;
 		function getToProcessList() {
 			var d = q.defer();
 			console.log("looking for videos to process");
-			db.all("select * from yt_videos where processed = ? and registered < ?", [0, ((new Date()).getTime()) - (2 * 60 * 60 * 100)],
+			db.all("select * from yt_videos where processed = ? and registered < ? and failed < ?",
+				[0, ((new Date()).getTime()) - (config.processDelay), config.videoCommandRetries],
 				function (err, data) {
 					if(err) throw err;
 					d.resolve(data);
