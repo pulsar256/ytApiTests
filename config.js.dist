@@ -9,10 +9,10 @@ module.exports = {
 	videoCommand: "echo processing {{video_id}} with external script",
 
 	// only look at videos uploaded in the past 48 hours
-	registerWindow: (new Date()).getTime() - (48 * 60 * 60 * 1000),
+	registerWindow:  (48 * 60 * 60 * 1000),
 
 	// default cache ttl (i.e. for subscriptions), defaults to 6 hours.
-	defaultCacheTTL: (new Date()).getTime() - (6 * 60 * 60 * 1000),
+	defaultCacheTTL:  (6 * 60 * 60 * 1000),
 
 	// delay for processing new registered videos.
 	processDelay: (2 * 60 * 60 * 1000),
