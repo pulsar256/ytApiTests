@@ -1,0 +1,15 @@
+{
+  "name": "YTBridge",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./app-js"
+  },
+  "dependencies": {
+    "lockfile": "~1.0.0",
+    "q": "~1.2.0",
+    "sqlite3": "~3.0.5",
+    "string": "~3.0.0",
+    "youtube-api": "~0.3.2"
+  }
+}

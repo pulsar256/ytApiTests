@@ -1,0 +1,16 @@
+module.exports = {
+
+	// your google app config parameters
+	client_id: "EDITME.apps.googleusercontent.com",
+	client_secret: "EDITME",
+	refresh_token: "EDITME",
+
+	// external command strings.js template, currently provided tempalte fields: same as yt_videos table structure
+	videoCommand: "echo processing {{video_id}} with external script",
+
+	// only look at videos uploaded in the past 48 hours
+	registerWindow: (new Date()).getTime() - (48 * 60 * 60 * 1000),
+
+	// default cache ttl (i.e. for subscriptions), defaults to 6 hours.
+	defaultCacheTTL: (new Date()).getTime() - (6 * 60 * 60 * 1000)
+};
