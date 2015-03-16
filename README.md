@@ -9,7 +9,7 @@ is provided (config.js.dist)
 
 todo: looking at the code it should be obvious that the code has been hacked together.
 
- [ ] Move all database related stuff into a dedicated module
- [ ] Move youtube related code into a dedicated module
- [ ] perhaps replace all remaining callback patterns with a q / promise based approach
- [ ] cleanup expired entries
+* [ ] Move all database related stuff into a dedicated module
+* [ ] Move youtube related code into a dedicated module
+* [ ] perhaps replace all remaining callback patterns with a q / promise based approach
+* [ ] cleanup expired entries
