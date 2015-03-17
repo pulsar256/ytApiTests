@@ -17,11 +17,11 @@ var db = require('./lib/db.js')(config);
 var cache = require('./lib/cache')(db.connection, config);
 
 // async processing will spawn *a lot* of parallel requests. As of the time of writing, Google allows 3000
-// Requests/sec/user. Even with a respectable amount of subscriptions (< 1500) we will exceed this limit. It has been
+// Requests/sec/user. Even with a respectable amount of subscriptions (< 1500) we won't exceed this limit. It has been
 // observed though, that a high number of parallel requests will yield occasional 500 errors. Also the stability might
 // vary with the operating system used. Overriding this number like this is rather harsh but it *will* improve the
 // overall stability. A better solution to this might be a manual rest api request rate limiting and synchronization.
-https.globalAgent.maxSockets = 10;
+https.globalAgent.maxSockets = 8;
 
 /**
  * Main
