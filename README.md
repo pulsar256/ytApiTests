@@ -32,8 +32,3 @@ xml feed generator or call... a nice python tool provided by rg3. Read the code 
 not that many comments in this hack and some aversions against callbacks.
 
 Happy hacking.
-
-* [x] Move all database related stuff into a dedicated module
-* [ ] Move youtube related code into a dedicated module
-* [x] perhaps replace all remaining callback patterns with a q / promise based approach
-* [ ] cleanup expired / processed entries

@@ -8,15 +8,18 @@ module.exports = {
 	// external command strings.js template, currently provided tempalte fields: same as yt_videos table structure
 	videoCommand: "echo processing {{video_id}} with external script",
 
-	// only look at videos uploaded in the past 48 hours
-	registerWindow:  (48 * 60 * 60 * 1000),
+	// only look at videos uploaded in the past 2 days
+	registerWindow: (2 * 24 * 60 * 60 * 1000),
+
+	// delete database items after 4 days. Must be greater than registerWindow
+	purgeAfter: (4 * 24 * 60 * 60 * 1000),
 
 	// default cache ttl (i.e. for subscriptions), defaults to 6 hours.
-	defaultCacheTTL:  (6 * 60 * 60 * 1000),
+	defaultCacheTTL: (6 * 60 * 60 * 1000),
 
 	// delay for processing new registered videos.
 	processDelay: (2 * 60 * 60 * 1000),
 
 	// number of retries for videoCommand scripts in case of non-zero return values.
-  videoCommandRetries: 3
+	videoCommandRetries: 3
 };
