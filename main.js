@@ -67,7 +67,7 @@ https.globalAgent.maxSockets = 8;
 					console.log("looking for new videos to schedule");
 					cache.get("s_playlists").then(function (data) {
 						if (!data) {
-							collectSubscriptionPlaylists().then(function (playlists) {
+							return collectSubscriptionPlaylists().then(function (playlists) {
 								return cache.put("s_playlists", playlists, null);
 							});
 						}
